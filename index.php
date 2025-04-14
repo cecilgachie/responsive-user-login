@@ -1,5 +1,22 @@
 <?php
 
+session_start();
+
+$errors = [
+    'login_error' => isset($_SESSION['login_error']) ? $_SESSION['login_error'] : null,
+    'register_error' => isset($_SESSION['register_error']) ? $_SESSION['register_error'] : null,
+];
+$active_form = isset($_SESSION['active_form']) ? $_SESSION['active_form'] : 'logn-form';
+
+session_unset();
+
+function showError($error) {
+    return !empty($error) ? "<div class='error'>$error</div>" : '';
+}
+
+fuction isActiveForm($formName, $active_form) {
+    return $formName === $active_form ? 'active' : '';
+}
 ?>
 
 <!DOCTYPE html>
@@ -12,9 +29,10 @@
 </head>
 <body>
     <div class="container">
-        <div class="form-box active" id="logn-form">
-            <form action="">
+        <div class="form-box <?= isActiveFotm('login', $activeform); ?>" id="logn-form">
+            <form action="login-register.php" method="post">
                 <h2>login</h2>
+                <?= showError($errors['login_error']) ?>
                 <input type="email" name="Email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit" class="btn">login</button>
@@ -22,9 +40,10 @@
             </form>
         </div>
 
-        <div class="form-box" id="register-form">
-            <form action="">
+        <div class="form-box" <?= isActiveFotm('register', $activeform); ?> id="register-form">
+            <form action="login-register.php" method="post">
                 <h2>Register</h2>
+                <?= showError($errors['register_error']) ?>
                 <input type="text" name="username" placeholder="Username" required>
                 <input type="email" name="Email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
